@@ -5,7 +5,7 @@ services:
     build:
       context: ./camunda-tomcat-hardened
     ports:
-      - "8080:8080"
+      - "8034:8080"
     depends_on:
       - db
     environment:
@@ -14,13 +14,21 @@ services:
       - DB_USERNAME=camunda
       - DB_PASSWORD=camunda
       - WAIT_FOR=db:5432
+    volumes:
+      - camunda:/camunda
 
   db:
     build: ./postgres-camunda-ee
-    ports:
-      - "5432:5432"
+#    ports:
+#      - "8035:5432"
     environment:
       - POSTGRES_DB=camunda
       - POSTGRES_USER=camunda
       - POSTGRES_PASSWORD=camunda
+    restart: always
+    volumes:
+      - db:/var/lib/postgresql/data
 
+volumes:
+  db:
+  camunda:
